@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบคลังความรู้อัจฉริยะการนิเทศการศึกษา - Educational Supervision Knowledge Base Hub</title>
+  
+  <!-- CSS Styles -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- FontAwesome for Premium Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Header -->
+    <header>
+      <div class="brand-section">
+        <div class="logo-icon">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div class="brand-title">
+          <h1>คลังความรู้อัจฉริยะการนิเทศการศึกษา</h1>
+          <p>Educational Supervision Knowledge Base Hub • ศน.รัชภูมิ สมสมัย ศธจ.เชียงใหม่</p>
+        </div>
+      </div>
+      
+      <!-- Sync Status & Control -->
+      <div class="sync-block">
+        <div class="status-badge">
+          <div id="statusDot" class="status-dot"></div>
+          <span id="statusText">เชื่อมต่อระบบหลังบ้าน...</span>
+        </div>
+        <button id="syncBtn" class="sync-btn" title="ดึงข้อมูลล่าสุดจาก Google Sheets">
+          <i class="fa-solid fa-rotate"></i>
+          <span>ดึงข้อมูลล่าสุด</span>
+        </button>
+        <button id="themeToggleBtn" class="theme-btn" title="สลับโหมด มืด/สว่าง">
+          <i class="fa-solid fa-moon"></i>
+          <span>โหมดมืด</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Stats Dashboard Panel -->
+    <section class="stats-overview" id="statsPanel">
+      <div class="stat-card total-docs">
+        <div class="stat-icon"><i class="fa-solid fa-file-pdf"></i></div>
+        <div class="stat-info">
+          <div class="stat-val" id="statTotal">--</div>
+          <div class="stat-lbl">เอกสารทั้งหมด</div>
+        </div>
+      </div>
+      <div class="stat-card m1" title="กลุ่มที่ 1: การพัฒนานวัตกรรมและองค์ความรู้เฉพาะทางในการนิเทศการศึกษา">
+        <div class="stat-icon"><i class="fa-solid fa-lightbulb"></i></div>
+        <div class="stat-info">
+          <div class="stat-val" id="statM1">--</div>
+          <div class="stat-lbl">กลุ่ม 1: นวัตกรรม & องค์ความรู้</div>
+        </div>
+      </div>
+      <div class="stat-card m2" title="กลุ่มที่ 2: การพัฒนาวิชาชีพและหนุนเสริมศักยภาพครูผ่านกระบวนการนิเทศแบบร่วมมือ">
+        <div class="stat-icon"><i class="fa-solid fa-users-gear"></i></div>
+        <div class="stat-info">
+          <div class="stat-val" id="statM2">--</div>
+          <div class="stat-lbl">กลุ่ม 2: พัฒนาวิชาชีพครู</div>
+        </div>
+      </div>
+      <div class="stat-card m3" title="กลุ่มที่ 3: การบริหารจัดการเครือข่ายและประสานความร่วมมือเพื่อการพัฒนาการศึกษาเชิงพื้นที่">
+        <div class="stat-icon"><i class="fa-solid fa-network-wired"></i></div>
+        <div class="stat-info">
+          <div class="stat-val" id="statM3">--</div>
+          <div class="stat-lbl">กลุ่ม 3: เครือข่ายเชิงพื้นที่</div>
+        </div>
+      </div>
+      <div class="stat-card m4" title="กลุ่มที่ 4: การพัฒนาระบบนิเวศการเรียนรู้ดิจิทัลและเทคโนโลยีสารสนเทศเพื่อการนิเทศการศึกษา">
+        <div class="stat-icon"><i class="fa-solid fa-laptop-code"></i></div>
+        <div class="stat-info">
+          <div class="stat-val" id="statM4">--</div>
+          <div class="stat-lbl">กลุ่ม 4: นิเวศดิจิทัล & IT</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Control Panel (Search & Filters) -->
+    <section class="control-panel">
+      <!-- Search Input -->
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" class="search-input" placeholder="ค้นหาเอกสารตามชื่อไฟล์, รายละเอียด, ภารกิจย่อย...">
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-row">
+        <!-- Main Mission Tabs -->
+        <div>
+          <div class="filter-group-title">กรองตามกลุ่มภารกิจหลัก</div>
+          <div class="mission-tabs" id="missionTabs">
+            <button class="tab-btn active" data-mission="all">ทั้งหมด</button>
+            <button class="tab-btn" data-mission="1">กลุ่ม 1</button>
+            <button class="tab-btn" data-mission="2">กลุ่ม 2</button>
+            <button class="tab-btn" data-mission="3">กลุ่ม 3</button>
+            <button class="tab-btn" data-mission="4">กลุ่ม 4</button>
+          </div>
+        </div>
+
+        <!-- Sub-Mission Dropdowns -->
+        <div class="select-filters">
+          <div class="custom-select-wrapper">
+            <div class="filter-group-title">ภารกิจย่อย</div>
+            <select id="subMissionFilter" class="custom-select">
+              <option value="all">-- แสดงภารกิจย่อยทั้งหมด --</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results Count -->
+    <div class="results-header">
+      <div class="results-count">พบเอกสารวิชาการทั้งหมด <span id="resultsCount">0</span> รายการ</div>
+      <div id="syncTime">อัปเดตล่าสุด: --</div>
+    </div>
+
+    <!-- Cards Grid -->
+    <main class="cards-grid" id="cardsContainer">
+      <!-- Cards will be dynamically inserted here via JS -->
+      <div class="empty-state">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <h3>กำลังดาวน์โหลดข้อมูลคลังความรู้...</h3>
+        <p>กำลังเชื่อมโยงและประมวลผลข้อมูลจาก Google Sheets และหลังบ้านกรุณารอสักครู่</p>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>© 2026 คลังความรู้อัจฉริยะเพื่อการนิเทศการศึกษา (Chiang Mai Educational Supervision Hub)</p>
+      <p>พัฒนาขึ้นเพื่อหนุนเสริมศักยภาพครูผู้สอนและการประยุกต์ใช้เทคโนโลยีดิจิทัลเชิงระบบ</p>
+    </footer>
+
+  </div>
+
+  <!-- Academic Summary Detailed Modal -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalFileName">ชื่อไฟล์เอกสาร</h3>
+        <button class="modal-close-btn" id="modalCloseBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-split-layout">
+          <div class="modal-info-panel">
+            <!-- 1. Description/Summary Content -->
+            <div class="modal-section-title">บทสรุปวิชาการ (Academic Summary)</div>
+            <div class="modal-summary-content" id="modalSummary">
+              รายละเอียดบทสรุปวิชาการ...
+            </div>
+
+            <!-- 3. Metadata (Main & Sub Missions) -->
+            <div class="modal-meta" style="margin-top: 1.25rem; border-top: 1px dashed rgba(128,128,128,0.2); padding-top: 12px; margin-bottom: 0;">
+              <div class="meta-item">
+                <div class="meta-label">ภารกิจหลัก:</div>
+                <div class="meta-value" id="modalMainMission">กลุ่มภารกิจ</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">ภารกิจย่อย:</div>
+                <div class="meta-value" id="modalSubMission">ภารกิจย่อย</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="modal-viewer-panel">
+            <!-- 2. Scrollable PDF Document Preview -->
+            <div class="modal-section-title">ตัวอย่างเอกสาร (Preview)</div>
+            <div class="modal-preview-container">
+              <div id="modalPreviewContainer" style="width: 100%; height: 100%;">
+                <!-- Iframe will be injected dynamically by JavaScript -->
+              </div>
+              <div class="iframe-header-blocker"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="action-btn btn-secondary" id="modalCloseFooterBtn">ปิดหน้าต่าง</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript App Logic -->
+  <script src="file_links.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

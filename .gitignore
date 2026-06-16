@@ -1,0 +1,10 @@
+# Dependencies
+node_modules/
+
+# Local PDF files (Google Drive will stream these, no need to host in repository)
+*.pdf
+test_folder.html
+
+# OS metadata
+.DS_Store
+Thumbs.db
