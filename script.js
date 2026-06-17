@@ -74,6 +74,11 @@ function setupEventListeners() {
     tab.classList.add('active');
 
     state.activeMissionGroup = tab.dataset.mission;
+    
+    // Reset sub-mission filter to 'all' when switching tabs
+    state.selectedSubMission = 'all';
+    subMissionFilter.value = 'all';
+    
     buildSubMissionDropdown(); // Rebuild sub-missions dropdown based on active tab selection
     applyFilters();
   });
