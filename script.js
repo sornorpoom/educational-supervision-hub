@@ -520,7 +520,7 @@ function renderCards() {
         <h3 class="card-title">${doc.fileName}</h3>
       </div>
       <div class="card-body">
-        ${doc.summary || '<i>ไม่มีรายละเอียดการถอดประสบการณ์การเรียนรู้</i>'}
+        ${doc.summary || '<i>ไม่มีรายละเอียดประสบการณ์จากการนิเทศบนฐาน ลุก / รับ / ทำ / เรียน / รู้</i>'}
       </div>
       <div class="card-actions">
         <button class="action-btn btn-card-primary" onclick="showDocumentDetails(${index})">
@@ -560,7 +560,7 @@ window.showDocumentDetails = function(index) {
   modalFileName.textContent = doc.fileName;
   modalMainMission.textContent = doc.mainMission || '-';
   modalSubMission.textContent = doc.subMission || '-';
-  modalSummary.innerHTML = doc.summary ? doc.summary.replace(/\n/g, '<br>') : '<i>ไม่มีบทสรุปวิชาการระบุไว้</i>';
+  modalSummary.innerHTML = doc.summary ? doc.summary.replace(/\n/g, '<br>') : '<i>ไม่มีรายละเอียดประสบการณ์จากการนิเทศบนฐาน ลุก / รับ / ทำ / เรียน / รู้</i>';
   
   const fileId = fileLinksMap[doc.fileName];
   const blocker = document.querySelector('.iframe-header-blocker');
