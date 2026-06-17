@@ -6,6 +6,8 @@
 // Configuration
 const BACKEND_API = '/api/documents';
 const GOOGLE_SHEET_JSON_URL = 'https://docs.google.com/spreadsheets/d/1hPLCd4ZPG1BrSELile63Mb2ftaJl9Ts2TCH5QvxrFgY/gviz/tq?tqx=out:json';
+// Google Sheets Registration Web App API URL
+const REGISTRATION_API_URL = 'https://script.google.com/macros/s/AKfycbxEDQ-TYGxgyp9qEP2GZEBQm6vSdzMiguVF9SLUOyxguv4n6znCH2ccXKddnCfqj3wTVg/exec';
 
 // Application State
 let allDocuments = [];
@@ -79,6 +81,18 @@ function setupEventListeners() {
     state.selectedSubMission = 'all';
     subMissionFilter.value = 'all';
     
+    // Highlight active legend description in the overview panel
+    const legends = document.querySelectorAll('.legend-item');
+    legends.forEach(item => {
+      if (state.activeMissionGroup === 'all' || item.classList.contains(`m${state.activeMissionGroup}`)) {
+        item.style.opacity = '1';
+        item.style.filter = 'none';
+      } else {
+        item.style.opacity = '0.35';
+        item.style.filter = 'grayscale(30%) blur(0.2px)';
+      }
+    });
+    
     buildSubMissionDropdown(); // Rebuild sub-missions dropdown based on active tab selection
     applyFilters();
   });
@@ -117,6 +131,25 @@ function setupEventListeners() {
 
   // Theme Toggle click listener
   themeToggleBtn.addEventListener('click', toggleTheme);
+
+  // Registration Modal Event Listeners
+  const regModalCloseBtn = document.getElementById('regModalCloseBtn');
+  const regModalCancelBtn = document.getElementById('regModalCancelBtn');
+  const registrationForm = document.getElementById('registrationForm');
+  const registrationModal = document.getElementById('registrationModal');
+
+  if (regModalCloseBtn) regModalCloseBtn.addEventListener('click', closeRegistrationModal);
+  if (regModalCancelBtn) regModalCancelBtn.addEventListener('click', closeRegistrationModal);
+  if (registrationForm) registrationForm.addEventListener('submit', handleRegistrationSubmit);
+  
+  // Close registration modal when clicking backdrop
+  if (registrationModal) {
+    registrationModal.addEventListener('click', (e) => {
+      if (e.target === registrationModal) {
+        closeRegistrationModal();
+      }
+    });
+  }
 }
 
 // Initialize theme from local storage
@@ -566,6 +599,17 @@ window.showDocumentDetails = function(index) {
     }
   }
 
+  // Show or Hide Download button based on whether a downloadable PDF file exists
+  const modalDownloadBtn = document.getElementById('modalDownloadBtn');
+  if (fileId) {
+    modalDownloadBtn.style.display = 'inline-flex';
+    // Save current doc reference for the download action
+    modalDownloadBtn.onclick = () => openRegistrationModal(doc, fileId);
+  } else {
+    modalDownloadBtn.style.display = 'none';
+    modalDownloadBtn.onclick = null;
+  }
+
   // Set modal accent color
   const modalContainer = detailModal.querySelector('.modal-container');
   modalContainer.className = 'modal-container'; // Reset classes
@@ -585,6 +629,130 @@ window.showDocumentDetails = function(index) {
 // Close modal window
 function closeModal() {
   detailModal.classList.remove('active');
+  closeRegistrationModal(); // Close registration modal too if the detail modal is closed
   document.body.style.overflow = ''; // Re-enable background scrolling
   modalPreviewContainer.innerHTML = ''; // Clear iframe to stop network requests & resource usage
+}
+
+// =========================================
+// REGISTRATION FORM MODAL LOGIC
+// =========================================
+let currentDownloadingDoc = null;
+let currentDownloadingFileId = null;
+
+function openRegistrationModal(doc, fileId) {
+  currentDownloadingDoc = doc;
+  currentDownloadingFileId = fileId;
+  
+  const regDocName = document.getElementById('regDocName');
+  const regMainMission = document.getElementById('regMainMission');
+  const regSubMission = document.getElementById('regSubMission');
+  const registrationModal = document.getElementById('registrationModal');
+  
+  if (regDocName) regDocName.textContent = doc.fileName;
+  if (regMainMission) regMainMission.textContent = doc.mainMission || '-';
+  if (regSubMission) regSubMission.textContent = doc.subMission || '-';
+  
+  // Auto-fill values from localStorage
+  const regEmail = document.getElementById('regEmail');
+  const regName = document.getElementById('regName');
+  const regSchool = document.getElementById('regSchool');
+  const regProvince = document.getElementById('regProvince');
+  const regObjective = document.getElementById('regObjective');
+  
+  if (regEmail) regEmail.value = localStorage.getItem('reg_email') || '';
+  if (regName) regName.value = localStorage.getItem('reg_name') || '';
+  if (regSchool) regSchool.value = localStorage.getItem('reg_school') || '';
+  if (regProvince) regProvince.value = localStorage.getItem('reg_province') || '';
+  if (regObjective) regObjective.value = ''; // Clear objective for fresh inputs
+  
+  if (registrationModal) {
+    registrationModal.classList.add('active');
+  }
+}
+
+function closeRegistrationModal() {
+  const registrationModal = document.getElementById('registrationModal');
+  if (registrationModal) {
+    registrationModal.classList.remove('active');
+  }
+  
+  // Reset submit button state
+  const regSubmitBtn = document.getElementById('regSubmitBtn');
+  if (regSubmitBtn) {
+    regSubmitBtn.disabled = false;
+    regSubmitBtn.innerHTML = '<i class="fa-solid fa-download"></i> ยืนยันและดาวน์โหลด';
+  }
+  
+  currentDownloadingDoc = null;
+  currentDownloadingFileId = null;
+}
+
+async function handleRegistrationSubmit(e) {
+  e.preventDefault();
+  
+  if (!currentDownloadingDoc || !currentDownloadingFileId) return;
+  
+  const regEmail = document.getElementById('regEmail').value.trim();
+  const regName = document.getElementById('regName').value.trim();
+  const regSchool = document.getElementById('regSchool').value.trim();
+  const regProvince = document.getElementById('regProvince').value.trim();
+  const regObjective = document.getElementById('regObjective').value.trim();
+  
+  // Save user details to localStorage for next time convenience
+  localStorage.setItem('reg_email', regEmail);
+  localStorage.setItem('reg_name', regName);
+  localStorage.setItem('reg_school', regSchool);
+  localStorage.setItem('reg_province', regProvince);
+  
+  // Show loading indicator in button
+  const regSubmitBtn = document.getElementById('regSubmitBtn');
+  if (regSubmitBtn) {
+    regSubmitBtn.disabled = true;
+    regSubmitBtn.innerHTML = '<span class="btn-spinner"></span> กำลังบันทึกข้อมูล...';
+  }
+  
+  // Prepare payload mapping sheet columns: Timestamp / pdf name / sub mission / main mission / e mail / name / school / province / objective
+  const payload = {
+    pdfName: currentDownloadingDoc.fileName,
+    subMission: currentDownloadingDoc.subMission,
+    mainMission: currentDownloadingDoc.mainMission,
+    email: regEmail,
+    name: regName,
+    school: regSchool,
+    province: regProvince,
+    objective: regObjective
+  };
+  
+  try {
+    if (REGISTRATION_API_URL) {
+      // Send as POST request (using text/plain content type to avoid CORS preflight options blocks in Apps Script)
+      await fetch(REGISTRATION_API_URL, {
+        method: 'POST',
+        mode: 'no-cors', // Bypasses CORS blocks since we do not need to read the Apps Script redirect response
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        },
+        body: JSON.stringify(payload)
+      });
+      console.log('Registration submitted to Google Sheets successfully.');
+    } else {
+      console.warn('REGISTRATION_API_URL is not set. Simulating Apps Script write...');
+      await new Promise(resolve => setTimeout(resolve, 800));
+    }
+  } catch (error) {
+    console.error('Error submitting registration:', error);
+    // Proceed to download anyway so the teacher still gets the document
+  } finally {
+    // Trigger Google Drive direct download
+    const downloadLink = document.createElement('a');
+    downloadLink.href = `https://drive.google.com/uc?export=download&id=${currentDownloadingFileId}`;
+    downloadLink.target = '_blank';
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    
+    // Close the registration overlay modal
+    closeRegistrationModal();
+  }
 }

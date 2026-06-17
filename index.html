@@ -97,6 +97,26 @@
             <button class="tab-btn" data-mission="3">กลุ่ม 3</button>
             <button class="tab-btn" data-mission="4">กลุ่ม 4</button>
           </div>
+          
+          <!-- Mission Overview Legends -->
+          <div class="mission-legends" id="missionLegends">
+            <div class="legend-item m1">
+              <span class="legend-badge">กลุ่ม 1</span>
+              <span class="legend-text">การพัฒนานวัตกรรมและองค์ความรู้เฉพาะทางในการนิเทศการศึกษา</span>
+            </div>
+            <div class="legend-item m2">
+              <span class="legend-badge">กลุ่ม 2</span>
+              <span class="legend-text">การพัฒนาวิชาชีพและหนุนเสริมศักยภาพครูผ่านกระบวนการนิเทศแบบร่วมมือ</span>
+            </div>
+            <div class="legend-item m3">
+              <span class="legend-badge">กลุ่ม 3</span>
+              <span class="legend-text">การบริหารจัดการเครือข่ายและประสานความร่วมมือเพื่อการพัฒนาการศึกษาเชิงพื้นที่</span>
+            </div>
+            <div class="legend-item m4">
+              <span class="legend-badge">กลุ่ม 4</span>
+              <span class="legend-text">การพัฒนาระบบนิเวศการเรียนรู้ดิจิทัลและเทคโนโลยีสารสนเทศเพื่อการนิเทศการศึกษา</span>
+            </div>
+          </div>
         </div>
 
         <!-- Sub-Mission Dropdowns -->
@@ -177,8 +197,64 @@
         </div>
       </div>
       <div class="modal-footer">
+        <button class="action-btn btn-modal-primary" id="modalDownloadBtn" style="display: none;">
+          <i class="fa-solid fa-download"></i> ดาวน์โหลดเอกสาร
+        </button>
         <button class="action-btn btn-secondary" id="modalCloseFooterBtn">ปิดหน้าต่าง</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Registration Form Modal -->
+  <div class="modal-overlay" id="registrationModal" style="z-index: 1100;">
+    <div class="modal-container" style="max-width: 620px; height: auto; max-height: 92vh; border-top: 6px solid var(--accent-blue);">
+      <div class="modal-header">
+        <h3 class="modal-title" style="display: flex; align-items: center; gap: 10px;">
+          <i class="fa-solid fa-file-signature" style="color: var(--accent-blue);"></i> 
+          ลงทะเบียนดาวน์โหลดเอกสาร
+        </h3>
+        <button class="modal-close-btn" id="regModalCloseBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="registrationForm" style="display: flex; flex-direction: column; overflow: hidden; margin: 0; padding: 0;">
+        <div class="modal-body" style="overflow-y: auto; display: flex; flex-direction: column; gap: 1.25rem; padding: 1.5rem;">
+          <div id="regIntroText" style="font-size: 0.92rem; line-height: 1.6; color: var(--text-secondary); background: var(--input-bg); padding: 1rem; border-radius: 12px; border: 1px solid var(--card-border); margin-bottom: 0.25rem;">
+            ขอบคุณที่ท่านสนใจดาวน์โหลดเอกสารชื่อ <strong id="regDocName" style="color: var(--text-primary);">...</strong> ซึ่งอยู่ในภารกิจหลัก <strong id="regMainMission" style="color: var(--text-primary);">...</strong> ภารกิจย่อย <strong id="regSubMission" style="color: var(--text-primary);">...</strong> เพื่อเป็นข้อมูลในการพัฒนางานต่อไป รบกวนท่านกรอกข้อมูลตามหัวข้อที่กำหนด
+          </div>
+          
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div class="reg-form-group">
+              <label class="reg-label" for="regEmail">อีเมล (E-mail) <span>*</span></label>
+              <input type="email" id="regEmail" class="reg-input" placeholder="example@email.com" required>
+            </div>
+            
+            <div class="reg-form-group">
+              <label class="reg-label" for="regName">ชื่อ-นามสกุล (Name) <span>*</span></label>
+              <input type="text" id="regName" class="reg-input" placeholder="ระบุชื่อ และนามสกุลของคุณครู" required>
+            </div>
+            
+            <div class="reg-form-group">
+              <label class="reg-label" for="regSchool">โรงเรียน/หน่วยงาน (School) <span>*</span></label>
+              <input type="text" id="regSchool" class="reg-input" placeholder="ระบุชื่อโรงเรียน หรือหน่วยงานต้นสังกัด" required>
+            </div>
+            
+            <div class="reg-form-group">
+              <label class="reg-label" for="regProvince">จังหวัด (Province) <span>*</span></label>
+              <input type="text" id="regProvince" class="reg-input" placeholder="ระบุจังหวัด เช่น เชียงใหม่" required>
+            </div>
+            
+            <div class="reg-form-group">
+              <label class="reg-label" for="regObjective">วัตถุประสงค์ของการนำเอกสารไปใช้ (Objective) <span>*</span></label>
+              <textarea id="regObjective" class="reg-input" placeholder="ระบุวัตถุประสงค์ เช่น เพื่อปรับปรุงการเรียนการสอน, ทำการวิจัยชั้นเรียน, ศึกษาค้นคว้า" required></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="padding: 1.25rem 1.5rem;">
+          <button type="button" class="action-btn btn-secondary" id="regModalCancelBtn">ยกเลิก</button>
+          <button type="submit" class="action-btn btn-modal-primary" id="regSubmitBtn" style="width: auto; padding: 10px 24px; display: inline-flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-download"></i> ยืนยันและดาวน์โหลด
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
