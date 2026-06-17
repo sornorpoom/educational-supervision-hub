@@ -464,6 +464,14 @@ function renderCards() {
     let badgeClass = `badge b-m${groupNum || 1}`;
     let groupShortLabel = `กลุ่มที่ ${groupNum || '-'}`;
     
+    // Determine if the item is a website or a PDF/Drive file
+    const isDrive = doc.link && (doc.link.includes('drive.google.com') || doc.link.includes('drive.google'));
+    const fileId = fileLinksMap[doc.fileName];
+    const isWebsite = doc.link && !isDrive && !fileId;
+    
+    const buttonIcon = isWebsite ? 'fa-solid fa-globe' : 'fa-solid fa-book-open';
+    const buttonLabel = isWebsite ? 'อ่านย่อ / Click webapp' : 'อ่านย่อ / อ่านไฟล์ PDF';
+    
     // Structure HTML inside card
     card.innerHTML = `
       <div class="card-header-block">
@@ -478,7 +486,7 @@ function renderCards() {
       </div>
       <div class="card-actions">
         <button class="action-btn btn-card-primary" onclick="showDocumentDetails(${index})">
-          <i class="fa-solid fa-book-open"></i> อ่านย่อ / อ่านไฟล์ PDF
+          <i class="${buttonIcon}"></i> ${buttonLabel}
         </button>
       </div>
     `;
