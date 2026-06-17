@@ -25,7 +25,6 @@ const statusDot = document.getElementById('statusDot');
 const statusText = document.getElementById('statusText');
 const syncBtn = document.getElementById('syncBtn');
 const cardsContainer = document.getElementById('cardsContainer');
-const searchInput = document.getElementById('searchInput');
 const missionTabs = document.getElementById('missionTabs');
 const subMissionFilter = document.getElementById('subMissionFilter');
 const sortOrder = document.getElementById('sortOrder');
@@ -64,11 +63,6 @@ function setupEventListeners() {
     loadData(true);
   });
 
-  // Search input typing (real-time filtering)
-  searchInput.addEventListener('input', (e) => {
-    state.searchQuery = e.target.value.trim().toLowerCase();
-    applyFilters();
-  });
 
   // Main mission tabs selection
   missionTabs.addEventListener('click', (e) => {
