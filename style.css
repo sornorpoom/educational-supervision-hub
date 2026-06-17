@@ -1083,3 +1083,33 @@ body.dark-theme .doc-card[data-mission-group="4"] .btn-card-primary { background
     height: 440px !important;
   }
 }
+
+/* Modal Primary Button Styles (Themed) */
+.btn-modal-primary {
+  color: white !important;
+  font-weight: 600;
+  border: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+  transition: all 0.25s ease;
+  background: linear-gradient(135deg, #0284c7, #0369a1);
+}
+
+.modal-container.m1 .btn-modal-primary { background: linear-gradient(135deg, #0284c7, #0369a1); }
+.modal-container.m2 .btn-modal-primary { background: linear-gradient(135deg, #db2777, #be185d); }
+.modal-container.m3 .btn-modal-primary { background: linear-gradient(135deg, #ea580c, #c2410c); }
+.modal-container.m4 .btn-modal-primary { background: linear-gradient(135deg, #0d9488, #0f766e); }
+
+body.dark-theme .modal-container.m1 .btn-modal-primary { background: linear-gradient(135deg, #00c6ff, #0072ff); }
+body.dark-theme .modal-container.m2 .btn-modal-primary { background: linear-gradient(135deg, #f857a6, #ff5858); }
+body.dark-theme .modal-container.m3 .btn-modal-primary { background: linear-gradient(135deg, #ff9966, #ff5e62); }
+body.dark-theme .modal-container.m4 .btn-modal-primary { background: linear-gradient(135deg, #11998e, #38ef7d); }
+
+.btn-modal-primary:hover {
+  transform: translateY(-2px) scale(1.03);
+  filter: brightness(1.15);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-modal-primary:active {
+  transform: translateY(0) scale(1);
+}

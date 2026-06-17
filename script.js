@@ -549,7 +549,7 @@ window.showDocumentDetails = function(index) {
           <i class="fa-solid fa-globe" style="font-size: 3.5rem; color: #0284c7; margin-bottom: 1.25rem; text-shadow: 0 0 15px rgba(2,132,199,0.2);"></i>
           <h4 style="margin-bottom: 8px;">ลิงก์เชื่อมโยงไปยังระบบเว็บแอปพลิเคชัน</h4>
           <p style="margin-bottom: 20px; max-width: 440px; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">เอกสารวิชาการชิ้นนี้ได้รับการพัฒนาเป็นระบบสารสนเทศอัจฉริยะแบบทำงานตอบโต้ได้ (Interactive Web Application) คุณสามารถกดปุ่มด้านล่างเพื่อเข้าสู่ระบบงานวิเคราะห์ O-NET ได้ครับ</p>
-          <a class="action-btn btn-card-primary" href="${doc.link}" target="_blank" style="width: auto; padding: 12px 28px; font-size: 0.95rem; border-radius: 30px; display: inline-flex;">
+          <a class="action-btn btn-modal-primary" href="${doc.link}" target="_blank" style="width: auto; padding: 12px 28px; font-size: 0.95rem; border-radius: 30px; display: inline-flex;">
             <i class="fa-solid fa-arrow-up-right-from-square"></i> เปิดเข้าใช้งานเว็บแอปพลิเคชัน
           </a>
         </div>
@@ -570,6 +570,7 @@ window.showDocumentDetails = function(index) {
   const modalContainer = detailModal.querySelector('.modal-container');
   modalContainer.className = 'modal-container'; // Reset classes
   if (groupNum) {
+    modalContainer.classList.add(`m${groupNum}`);
     // Add custom border glow class if needed
     modalContainer.style.borderTop = `6px solid var(--mission-${groupNum}-start)`;
   } else {
