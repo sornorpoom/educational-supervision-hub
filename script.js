@@ -517,19 +517,40 @@ window.showDocumentDetails = function(index) {
   modalSummary.innerHTML = doc.summary ? doc.summary.replace(/\n/g, '<br>') : '<i>ไม่มีบทสรุปวิชาการระบุไว้</i>';
   
   const fileId = fileLinksMap[doc.fileName];
-  const directLink = fileId ? `https://drive.google.com/uc?export=view&id=${fileId}` : doc.link;
+  const blocker = document.querySelector('.iframe-header-blocker');
   
   // Render scrollable document preview if direct link is resolved
   if (fileId) {
     modalPreviewContainer.innerHTML = `<iframe class="modal-preview-iframe" src="https://drive.google.com/file/d/${fileId}/preview" allow="autoplay"></iframe>`;
+    if (blocker) blocker.style.display = 'block';
   } else {
-    modalPreviewContainer.innerHTML = `
-      <div class="empty-preview">
-        <i class="fa-solid fa-folder-open"></i>
-        <h4>ไม่พบตัวอย่างเอกสารสำหรับรายการนี้</h4>
-        <p>เอกสารชิ้นนี้ยังไม่ได้ทำระบบแสดงตัวอย่างบนระบบหน้าบ้านครับ</p>
-      </div>
-    `;
+    if (blocker) blocker.style.display = 'none';
+    
+    // Check if the link is an external web application link
+    const isDrive = doc.link && (doc.link.includes('drive.google.com') || doc.link.includes('drive.google'));
+    
+    if (doc.link && !isDrive) {
+      // It is an external web application link
+      modalPreviewContainer.innerHTML = `
+        <div class="empty-preview">
+          <i class="fa-solid fa-globe" style="font-size: 3.5rem; color: #0284c7; margin-bottom: 1.25rem; text-shadow: 0 0 15px rgba(2,132,199,0.2);"></i>
+          <h4 style="margin-bottom: 8px;">ลิงก์เชื่อมโยงไปยังระบบเว็บแอปพลิเคชัน</h4>
+          <p style="margin-bottom: 20px; max-width: 440px; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">เอกสารวิชาการชิ้นนี้ได้รับการพัฒนาเป็นระบบสารสนเทศอัจฉริยะแบบทำงานตอบโต้ได้ (Interactive Web Application) คุณสามารถกดปุ่มด้านล่างเพื่อเข้าสู่ระบบงานวิเคราะห์ O-NET ได้ครับ</p>
+          <a class="action-btn btn-card-primary" href="${doc.link}" target="_blank" style="width: auto; padding: 12px 28px; font-size: 0.95rem; border-radius: 30px; display: inline-flex;">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> เปิดเข้าใช้งานเว็บแอปพลิเคชัน
+          </a>
+        </div>
+      `;
+    } else {
+      // It is a google drive folder or has no link
+      modalPreviewContainer.innerHTML = `
+        <div class="empty-preview">
+          <i class="fa-solid fa-folder-open"></i>
+          <h4>ไม่พบตัวอย่างเอกสารสำหรับรายการนี้</h4>
+          <p>เอกสารชิ้นนี้ยังไม่ได้ทำระบบแสดงตัวอย่างบนระบบหน้าบ้านครับ</p>
+        </div>
+      `;
+    }
   }
 
   // Set modal accent color
