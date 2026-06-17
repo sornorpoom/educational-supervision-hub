@@ -561,8 +561,21 @@ window.showDocumentDetails = function(index) {
   modalMainMission.textContent = doc.mainMission || '-';
   modalSubMission.textContent = doc.subMission || '-';
   modalSummary.innerHTML = doc.summary ? doc.summary.replace(/\n/g, '<br>') : '<i>ไม่มีรายละเอียดประสบการณ์จากการนิเทศบนฐาน ลุก / รับ / ทำ / เรียน / รู้</i>';
+  let fileId = fileLinksMap[doc.fileName];
   
-  const fileId = fileLinksMap[doc.fileName];
+  // If not found in mapping, try to extract file ID directly if doc.link is a Google Drive file link
+  if (!fileId && doc.link && (doc.link.includes('drive.google.com/file/d/') || doc.link.includes('drive.google.com/open?id='))) {
+    const fileDMatch = doc.link.match(/\/file\/d\/([a-zA-Z0-9_-]{25,50})/);
+    if (fileDMatch) {
+      fileId = fileDMatch[1];
+    } else {
+      const fileIdMatch = doc.link.match(/[?&]id=([a-zA-Z0-9_-]{25,50})/);
+      if (fileIdMatch) {
+        fileId = fileIdMatch[1];
+      }
+    }
+  }
+
   const blocker = document.querySelector('.iframe-header-blocker');
   
   // Render scrollable document preview if direct link is resolved
