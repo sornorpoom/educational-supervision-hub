@@ -187,6 +187,27 @@ function setupEventListeners() {
       }
     });
   }
+
+  // Dynamic button click feedback (shake animation & mobile haptic vibration)
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('button, .tab-btn, .action-btn, .theme-btn, .sync-btn');
+    if (btn) {
+      // 1. Visual shake animation
+      btn.classList.remove('shake-active');
+      void btn.offsetWidth; // Trigger reflow to restart animation
+      btn.classList.add('shake-active');
+      
+      // Remove class after animation finishes
+      setTimeout(() => {
+        btn.classList.remove('shake-active');
+      }, 160);
+
+      // 2. Mobile Haptic feedback if supported
+      if (navigator.vibrate) {
+        navigator.vibrate(20);
+      }
+    }
+  });
 }
 
 // Initialize theme from local storage

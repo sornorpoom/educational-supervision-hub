@@ -1374,3 +1374,19 @@ textarea.reg-input {
 .search-action-btn.secondary:active {
   transform: translateY(0);
 }
+
+/* Click Shake/Vibrate Animation */
+@keyframes element-shake {
+  0% { transform: translateX(0) scale(0.98); }
+  20% { transform: translateX(-3px) scale(0.98); }
+  40% { transform: translateX(3px) scale(0.98); }
+  60% { transform: translateX(-2px) scale(0.98); }
+  80% { transform: translateX(2px) scale(0.98); }
+  100% { transform: translateX(0) scale(0.98); }
+}
+
+.shake-active {
+  animation: element-shake 0.15s cubic-bezier(.36,.07,.19,.97) both !important;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
