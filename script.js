@@ -32,6 +32,8 @@ const subMissionFilter = document.getElementById('subMissionFilter');
 const sortOrder = document.getElementById('sortOrder');
 const resultsCount = document.getElementById('resultsCount');
 const syncTime = document.getElementById('syncTime');
+const searchInput = document.getElementById('searchInput');
+const searchResetBtn = document.getElementById('searchResetBtn');
 
 // Stats Counters
 const statTotal = document.getElementById('statTotal');
@@ -131,6 +133,41 @@ function setupEventListeners() {
 
   // Theme Toggle click listener
   themeToggleBtn.addEventListener('click', toggleTheme);
+
+  // Search Action Handler
+  const performSearch = () => {
+    if (searchInput) {
+      state.searchQuery = searchInput.value.toLowerCase().trim();
+      applyFilters();
+    }
+  };
+
+  // Search Button click listener
+  const searchBtn = document.getElementById('searchBtn');
+  if (searchBtn) {
+    searchBtn.addEventListener('click', performSearch);
+  }
+
+  // Search Input listener (Enter key)
+  if (searchInput) {
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        performSearch();
+      }
+    });
+  }
+
+  // Clear/Reset Search Button click listener
+  if (searchResetBtn) {
+    searchResetBtn.addEventListener('click', () => {
+      if (searchInput) {
+        searchInput.value = '';
+        searchInput.focus();
+      }
+      state.searchQuery = '';
+      applyFilters();
+    });
+  }
 
   // Registration Modal Event Listeners
   const regModalCloseBtn = document.getElementById('regModalCloseBtn');
