@@ -155,6 +155,8 @@ function setupEventListeners() {
         performSearch();
       }
     });
+    // Real-time filtering as user types
+    searchInput.addEventListener('input', performSearch);
   }
 
   // Clear/Reset Search Button click listener
@@ -487,10 +489,10 @@ function applyFilters() {
     // 1. Search Query filter
     const matchesSearch = 
       state.searchQuery === '' ||
-      doc.fileName.toLowerCase().includes(state.searchQuery) ||
-      doc.summary.toLowerCase().includes(state.searchQuery) ||
-      doc.mainMission.toLowerCase().includes(state.searchQuery) ||
-      doc.subMission.toLowerCase().includes(state.searchQuery);
+      (doc.fileName || '').toLowerCase().includes(state.searchQuery) ||
+      (doc.summary || '').toLowerCase().includes(state.searchQuery) ||
+      (doc.mainMission || '').toLowerCase().includes(state.searchQuery) ||
+      (doc.subMission || '').toLowerCase().includes(state.searchQuery);
       
     // 2. Main Mission Tab filter
     const matchesTab = 
